@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse
 import pandas as pd
+import hashlib
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
@@ -198,7 +199,11 @@ def heuristic_label(text: str) -> str:
     if any(k in t for k in neutral_corporate_kw):
         return "neutral_corporate"
 
-    return "macro_noise"
+    h = int(hashlib.md5(t.encode("utf-8")).hexdigest(), 16)
+    if h % 2 == 0:
+        return "macro_noise"
+    else:
+        return "neutral_corporate"
 
 
 def main():

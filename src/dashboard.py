@@ -711,6 +711,24 @@ def overall_polarity(label_counts: pd.Series) -> str:
         return "Overall narrative is **negative / pessimistic**."
     return "Overall narrative is **mixed / neutral**."
 
+def adjust_label_with_rules(text: str, predicted_label: str) -> str:
+
+    t = (text or "").lower()
+
+    bullish_phrases = [
+        "strong growth stock",
+        "strong buy",
+        "top growth stock",
+        "why this stock is a buy",
+        "why this stock could rally",
+    ]
+
+    if predicted_label in ("pessimistic", "neutral_corporate"):
+        if any(phrase in t for phrase in bullish_phrases):
+            return "optimistic"
+
+    return predicted_label
+
 
 def main():
     st.set_page_config(
@@ -722,13 +740,13 @@ def main():
     st.markdown(
         """
             <style>
-            /* shrink the entire metric block (label + value + delta) */
+           
             div[data-testid="metric-container"] {
                 transform: scale(0.7);
                 transform-origin: top left;
             }
 
-            /* optional: adjust spacing after scaling so it doesn't look cramped */
+          
             div[data-testid="metric-container"] {
                 margin-right: 0.5rem;
             }
@@ -798,8 +816,15 @@ def main():
         return
 
     with st.spinner("Classifying narratives..."):
-        labels = model.predict(df["text"])
-    df["label"] = labels
+        raw_labels = model.predict(df["text"])
+
+    adjusted_labels = []
+    for text, label in zip(df["text"], raw_labels):
+        fixed = adjust_label_with_rules(text, label)
+        adjusted_labels.append(fixed)
+
+    df["label"] = adjusted_labels
+
 
     label_counts = df["label"].value_counts().reindex(LABEL_ORDER).fillna(0).astype(int)
 

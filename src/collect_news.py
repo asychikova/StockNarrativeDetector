@@ -12,10 +12,13 @@ import argparse
 from bs4 import BeautifulSoup
 from fulltext import fetch_full_text  
 
+from dotenv import load_dotenv
+load_dotenv()
+
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 DATA_DIR.mkdir(exist_ok=True, parents=True)
 
-NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "53fd7adb63cb4a94b646d285a91be525")
+NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
 
 NEWSAPI_EVERYTHING_URL = "https://newsapi.org/v2/everything"
 
