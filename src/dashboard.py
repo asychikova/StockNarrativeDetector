@@ -12,9 +12,10 @@ import yfinance as yf
 from dateutil.parser import parse as parse_date
 import altair as alt
 
-
-
 from fulltext import fetch_full_text
+
+from dotenv import load_dotenv
+load_dotenv() 
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 MODELS_DIR = Path(__file__).resolve().parents[1] / "models"
@@ -30,7 +31,7 @@ LABEL_ORDER = [
     "macro_noise",
 ]
 
-NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "53fd7adb63cb4a94b646d285a91be525")
+NEWSAPI_KEY = st.secrets.get("NEWSAPI_KEY", os.getenv("NEWSAPI_KEY"))
 
 NEWSAPI_EVERYTHING_URL = "https://newsapi.org/v2/everything"
 LANGUAGE = "en"
@@ -413,7 +414,7 @@ def fetch_newsapi_everything(query: str, days_back: int):
     Important: free NewsAPI dev accounts are limited to 100 results total.
     We cap at 100 and never request pages past that offset.
     """
-    if not NEWSAPI_KEY or NEWSAPI_KEY.startswith("YOUR_"):
+    if not NEWSAPI_KEY:
         return []
 
     now_utc = datetime.now(timezone.utc)

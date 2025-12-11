@@ -11,3 +11,4 @@ lxml
 yfinance
 fulltext
 python-dateutil
+python-dotenv
