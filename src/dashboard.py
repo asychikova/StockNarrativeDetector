@@ -716,11 +716,20 @@ def adjust_label_with_rules(text: str, predicted_label: str) -> str:
 
     regulatory_keywords = [
         "lawsuit", "sues", "sued", "court", "judge", "regulatory",
-        "investigation", "probe", "sec", "doj", "ftc", "legal case",
-        "settlement", "hearing", "charges", "antitrust"
+        "investigation", "probe", "sec", "doj", "ftc",
+        "legal case", "settlement", "hearing", "charges", "antitrust"
     ]
     if any(k in t for k in regulatory_keywords):
         return "regulatory"
+
+    strategic_keywords = [
+        "partnership", "partners with", "collaboration", "teams up",
+        "agreement", "strategic alliance", "joint venture",
+        "cooperate", "deal with", "expands partnership",
+        "acquires", "acquisition", "merger", "takeover"
+    ]
+    if any(k in t for k in strategic_keywords):
+        return "strategic_moves"
 
     bullish_phrases = [
         "strong growth stock",
@@ -731,12 +740,12 @@ def adjust_label_with_rules(text: str, predicted_label: str) -> str:
         "bullish case",
         "growth opportunity"
     ]
-
     if predicted_label in ("pessimistic", "neutral_corporate"):
         if any(phrase in t for phrase in bullish_phrases):
             return "optimistic"
 
     return predicted_label
+
 
 
 
