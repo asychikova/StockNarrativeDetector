@@ -9,6 +9,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils import resample
+
 import joblib
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
@@ -57,33 +58,25 @@ def main():
     print(df["label"].value_counts())
 
     label_counts_series = df["label"].value_counts()
-    target_n = min(100, max(5, label_counts_series.min()))
+    target_n = 80
+
 
     print(f"\nTarget samples per class for balancing: {target_n}")
 
     balanced_frames = []
     for label, group in df.groupby("label"):
-        if len(group) > target_n:
-            group_bal = resample(
-                group,
-                n_samples=target_n,
-                replace=False,
-                random_state=42,
-            )
-        elif len(group) < target_n:
-            group_bal = resample(
-                group,
-                n_samples=target_n,
-                replace=True,
-                random_state=42,
-            )
-        else:
-            group_bal = group
+        group_bal = resample(
+            group,
+            n_samples=target_n,
+            replace=len(group) < target_n,  # oversample if too few
+            random_state=42,
+        )
+    balanced_frames.append(group_bal)
+    print("Original label distribution:")
+    print(label_counts_series)
+    print("\nBalanced label distribution:")
+    print(df["label"].value_counts())
 
-        balanced_frames.append(group_bal)
-
-    df = pd.concat(balanced_frames, ignore_index=True)
-    df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 
     print("\nBalanced label distribution:")
     print(df["label"].value_counts())
