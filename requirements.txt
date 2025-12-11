@@ -1,8 +1,13 @@
+streamlit
 pandas
 numpy
 requests
 feedparser
+beautifulsoup4
 scikit-learn
 joblib
 streamlit
+lxml
+yfinance
+fulltext
 python-dateutil
