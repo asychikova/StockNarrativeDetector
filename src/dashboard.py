@@ -712,8 +712,15 @@ def overall_polarity(label_counts: pd.Series) -> str:
     return "Overall narrative is **mixed / neutral**."
 
 def adjust_label_with_rules(text: str, predicted_label: str) -> str:
-
     t = (text or "").lower()
+
+    regulatory_keywords = [
+        "lawsuit", "sues", "sued", "court", "judge", "regulatory",
+        "investigation", "probe", "sec", "doj", "ftc", "legal case",
+        "settlement", "hearing", "charges", "antitrust"
+    ]
+    if any(k in t for k in regulatory_keywords):
+        return "regulatory"
 
     bullish_phrases = [
         "strong growth stock",
@@ -721,6 +728,8 @@ def adjust_label_with_rules(text: str, predicted_label: str) -> str:
         "top growth stock",
         "why this stock is a buy",
         "why this stock could rally",
+        "bullish case",
+        "growth opportunity"
     ]
 
     if predicted_label in ("pessimistic", "neutral_corporate"):
@@ -728,6 +737,7 @@ def adjust_label_with_rules(text: str, predicted_label: str) -> str:
             return "optimistic"
 
     return predicted_label
+
 
 
 def main():
@@ -818,12 +828,10 @@ def main():
     with st.spinner("Classifying narratives..."):
         raw_labels = model.predict(df["text"])
 
-    adjusted_labels = []
-    for text, label in zip(df["text"], raw_labels):
-        fixed = adjust_label_with_rules(text, label)
-        adjusted_labels.append(fixed)
-
-    df["label"] = adjusted_labels
+    df["label"] = [
+        adjust_label_with_rules(txt, lbl)
+        for txt, lbl in zip(df["text"], raw_labels)
+    ]
 
 
     label_counts = df["label"].value_counts().reindex(LABEL_ORDER).fillna(0).astype(int)

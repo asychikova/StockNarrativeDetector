@@ -54,7 +54,22 @@ def heuristic_label(text: str) -> str:
         "above-street estimates", "analyst upgrade", "initiated outperform",
         "price target boosted", "EPS beat", "revenue acceleration", "growth tailwinds",
     ]
-
+        
+    regulatory_kw = [
+        "antitrust","anti-trust","doj","department of justice","ftc","sec",
+        "regulator","regulatory","regulatory action","regulatory review",
+        "regulatory scrutiny","regulatory probe","regulatory investigation",
+        "competition authority","competition regulator","cartel","fine","fined",
+        "penalty","settlement","consent decree","lawsuit","class action","sued",
+        "investigation launched","charges filed",
+        "lawsuit", "sues", "sued", "court", "appeal", "judge",
+        "regulator", "regulatory", "compliance", "probe", "investigation",
+        "settlement", "fine", "fcc", "doj", "ftc", "attorney general",
+        "criminal charges","civil charges","regulatory concerns",
+        "government inquiry","formal inquiry","regulatory intervention",
+        "antitrust lawsuit","blocked merger","deal scrutiny","court ruling",
+        "compliance violation","breach of regulations","oversight committee",
+    ]
 
     pessimistic_kw = [
 
@@ -125,22 +140,6 @@ def heuristic_label(text: str) -> str:
         "parabolic move","big money flowing in","crazy upside",
         "insane rally incoming","absolute rocket","monster gains",
         "huge profit potential","get in early","massive momentum",
-    ]
-
-    regulatory_kw = [
-        "antitrust","anti-trust","doj","department of justice","ftc","sec",
-        "regulator","regulatory","regulatory action","regulatory review",
-        "regulatory scrutiny","regulatory probe","regulatory investigation",
-        "competition authority","competition regulator","cartel","fine","fined",
-        "penalty","settlement","consent decree","lawsuit","class action","sued",
-        "investigation launched","charges filed",
-        "lawsuit", "sues", "sued", "court", "appeal", "judge",
-        "regulator", "regulatory", "compliance", "probe", "investigation",
-        "settlement", "fine", "fcc", "doj", "ftc", "attorney general",
-        "criminal charges","civil charges","regulatory concerns",
-        "government inquiry","formal inquiry","regulatory intervention",
-        "antitrust lawsuit","blocked merger","deal scrutiny","court ruling",
-        "compliance violation","breach of regulations","oversight committee",
     ]
 
     strategic_kw = [
